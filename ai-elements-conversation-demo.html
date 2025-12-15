@@ -1,0 +1,1933 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI智能教学助手</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: #f5f5f7;
+            min-height: 100vh;
+            display: flex;
+            overflow: hidden;
+        }
+
+        /* 左侧侧边栏 */
+        .sidebar {
+            width: 240px;
+            background: white;
+            border-right: 1px solid #e0e0e0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .sidebar-header {
+            padding: 20px 16px;
+            border-bottom: 1px solid #f0f0f0;
+            font-size: 14px;
+            color: #666;
+            line-height: 1.5;
+        }
+
+        .menu-list {
+            flex: 1;
+            padding: 8px 0;
+            overflow-y: auto;
+        }
+
+        .menu-item {
+            padding: 12px 16px;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: #333;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .menu-item:hover {
+            background: #f5f5f5;
+        }
+
+        .menu-item.active {
+            background: #e8e8e8;
+            color: #1890ff;
+            font-weight: 500;
+        }
+
+        .sidebar-footer {
+            padding: 12px 16px;
+            border-top: 1px solid #f0f0f0;
+        }
+
+        .footer-btn {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            background: white;
+            color: #666;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+            margin-bottom: 8px;
+        }
+
+        .footer-btn:last-child {
+            margin-bottom: 0;
+        }
+
+        .footer-btn:hover {
+            background: #f5f5f5;
+            border-color: #1890ff;
+            color: #1890ff;
+        }
+
+        /* 右侧主内容区 */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .content-header {
+            background: white;
+            padding: 20px 24px;
+            border-bottom: 1px solid #e0e0e0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .content-header-left {
+            flex: 1;
+        }
+
+        .content-header h2 {
+            font-size: 20px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 4px;
+        }
+
+        .content-header p {
+            font-size: 13px;
+            color: #999;
+        }
+
+        .content-header-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .header-action-btn {
+            padding: 8px 16px;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            background: white;
+            color: #666;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .header-action-btn:hover {
+            background: #f5f5f5;
+            border-color: #1890ff;
+            color: #1890ff;
+        }
+
+        .header-action-btn.primary {
+            background: #1890ff;
+            color: white;
+            border-color: #1890ff;
+        }
+
+        .header-action-btn.primary:hover {
+            background: #40a9ff;
+        }
+
+        .content-body {
+            flex: 1;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* 聊天界面样式 */
+        .chat-container {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            background: #fafafa;
+        }
+
+        .chat-content {
+            flex: 1;
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        ai-message {
+            display: block;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message {
+            display: flex;
+            gap: 12px;
+            max-width: 75%;
+            margin-bottom: 16px;
+        }
+
+        .message > div:last-child {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .message.user {
+            align-self: flex-end;
+            flex-direction: row-reverse;
+        }
+
+        .message.assistant {
+            align-self: flex-start;
+        }
+
+        .message-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            flex-shrink: 0;
+            font-size: 14px;
+        }
+
+        .message.user .message-avatar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .message.assistant .message-avatar {
+            background: linear-gradient(135deg, #00d4ff 0%, #5b8def 100%);
+            color: white;
+        }
+
+        .message-content {
+            background: white;
+            padding: 12px 16px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            line-height: 1.6;
+            word-wrap: break-word;
+            position: relative;
+        }
+
+        .message.user .message-content {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .message.assistant .message-content {
+            background: white;
+            color: #333;
+        }
+
+        .message-time {
+            font-size: 11px;
+            color: #999;
+            margin-top: 4px;
+        }
+
+        .message.user .message-time {
+            text-align: left;
+        }
+
+        .message.assistant .message-time {
+            text-align: left;
+        }
+
+        /* 任务清单样式 */
+        .task-list {
+            margin-top: 12px;
+            padding: 12px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 3px solid #1890ff;
+        }
+
+        .task-list-title {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #333;
+            font-size: 14px;
+        }
+
+        .task-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            margin-bottom: 6px;
+            font-size: 13px;
+            color: #666;
+        }
+
+        .task-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .task-checkbox {
+            margin-top: 2px;
+            flex-shrink: 0;
+        }
+
+        /* 工具调用监控列表 */
+        .tool-monitor {
+            margin-top: 12px;
+            padding: 12px;
+            background: #f0f7ff;
+            border-radius: 8px;
+            border: 1px solid #d4e9ff;
+        }
+
+        .tool-monitor-title {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 8px;
+        }
+
+        .tool-item {
+            padding: 6px 8px;
+            background: white;
+            border-radius: 4px;
+            margin-bottom: 4px;
+            font-size: 12px;
+            color: #333;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .tool-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .tool-status {
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+        }
+
+        .tool-status.success {
+            background: #f6ffed;
+            color: #52c41a;
+        }
+
+        .tool-status.processing {
+            background: #fff7e6;
+            color: #faad14;
+        }
+
+        /* 输入区域 */
+        ai-prompt-input {
+            display: block;
+            border-top: 1px solid #e0e0e0;
+            background: white;
+            flex-shrink: 0;
+        }
+
+        .prompt-input-container {
+            padding: 16px 24px;
+            display: flex;
+            gap: 12px;
+            align-items: flex-end;
+        }
+
+        .prompt-input-wrapper {
+            flex: 1;
+            position: relative;
+        }
+
+        .prompt-input {
+            width: 100%;
+            min-height: 44px;
+            max-height: 120px;
+            padding: 12px 16px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+            resize: none;
+            outline: none;
+            transition: border-color 0.3s;
+            background: #fafafa;
+        }
+
+        .prompt-input:focus {
+            border-color: #1890ff;
+            background: white;
+        }
+
+        .prompt-input::placeholder {
+            color: #999;
+        }
+
+        .input-actions {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .voice-button {
+            width: 44px;
+            height: 44px;
+            border: 1px solid #e0e0e0;
+            border-radius: 50%;
+            background: white;
+            color: #666;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            flex-shrink: 0;
+            font-size: 10px;
+            gap: 2px;
+        }
+
+        .voice-button:hover {
+            background: #f5f5f5;
+            border-color: #1890ff;
+            color: #1890ff;
+        }
+
+        .voice-button svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .send-button {
+            width: 44px;
+            height: 44px;
+            border: none;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.2s, box-shadow 0.2s;
+            flex-shrink: 0;
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+        }
+
+        .send-button:hover:not(:disabled) {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        .send-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .send-button svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .file-upload-btn {
+            width: 44px;
+            height: 44px;
+            border: 1px solid #e0e0e0;
+            border-radius: 50%;
+            background: white;
+            color: #666;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            flex-shrink: 0;
+        }
+
+        .file-upload-btn:hover {
+            background: #f5f5f5;
+            border-color: #1890ff;
+            color: #1890ff;
+        }
+
+        .file-upload-btn svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        /* 加载指示器 */
+        .typing-indicator {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 16px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            max-width: 100px;
+        }
+
+        .typing-dots {
+            display: flex;
+            gap: 4px;
+        }
+
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #1890ff;
+            animation: typing 1.4s infinite;
+        }
+
+        .typing-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes typing {
+            0%, 60%, 100% {
+                transform: translateY(0);
+            }
+            30% {
+                transform: translateY(-10px);
+            }
+        }
+
+        /* 配置面板样式 - Ant Design风格 */
+        .config-panel {
+            display: none;
+            flex-direction: column;
+            height: 100%;
+            background: #f5f5f5;
+            padding: 24px;
+            overflow-y: auto;
+        }
+
+        .config-panel.active {
+            display: flex;
+        }
+
+        .config-status {
+            background: #fff;
+            border: 1px solid #d9d9d9;
+            border-radius: 6px;
+            padding: 16px 20px;
+            margin-bottom: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 0 rgba(0, 0, 0, 0.02);
+        }
+
+        .config-status-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .config-status-label {
+            font-weight: 600;
+            color: #262626;
+            font-size: 16px;
+        }
+
+        .config-status-left > span:last-child {
+            color: #595959;
+            font-size: 14px;
+        }
+
+        .config-status-right {
+            color: #8c8c8c;
+            font-size: 13px;
+        }
+
+        .config-form {
+            background: #fff;
+            border-radius: 6px;
+            padding: 32px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+            border: 1px solid #f0f0f0;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        .form-group:last-child {
+            margin-bottom: 0;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #262626;
+            line-height: 1.5715;
+        }
+
+        .form-label::before {
+            display: inline-block;
+            margin-right: 4px;
+            color: #ff4d4f;
+            font-size: 14px;
+            font-family: SimSun, sans-serif;
+            line-height: 1;
+            content: '*';
+        }
+
+        .form-label.optional::before {
+            content: '';
+        }
+
+        .form-input,
+        .form-select {
+            width: 100%;
+            padding: 6.5px 11px;
+            border: 1px solid #d9d9d9;
+            border-radius: 6px;
+            font-size: 14px;
+            line-height: 1.5715;
+            color: rgba(0, 0, 0, 0.88);
+            transition: all 0.2s;
+            outline: none;
+            background-color: #fff;
+        }
+
+        .form-input:focus,
+        .form-select:focus {
+            border-color: #4096ff;
+            box-shadow: 0 0 0 2px rgba(5, 145, 255, 0.1);
+        }
+
+        .form-input:disabled,
+        .form-select:disabled {
+            background-color: #f5f5f5;
+            cursor: not-allowed;
+            color: rgba(0, 0, 0, 0.25);
+        }
+
+        .form-textarea {
+            min-height: 80px;
+            resize: vertical;
+            padding: 6.5px 11px;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 16px;
+        }
+
+        .form-row .form-group {
+            flex: 1;
+        }
+
+        .checkbox-group {
+            display: flex;
+            gap: 24px;
+            flex-wrap: wrap;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+            accent-color: #1890ff;
+        }
+
+        .checkbox-item label {
+            cursor: pointer;
+            font-size: 14px;
+            color: rgba(0, 0, 0, 0.88);
+            margin: 0;
+        }
+
+        .radio-group {
+            display: flex;
+            gap: 24px;
+            flex-wrap: wrap;
+        }
+
+        .radio-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+        }
+
+        .radio-item input[type="radio"] {
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+            accent-color: #1890ff;
+        }
+
+        .radio-item label {
+            cursor: pointer;
+            font-size: 14px;
+            color: rgba(0, 0, 0, 0.88);
+            margin: 0;
+        }
+
+        .tag-group {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .tag {
+            padding: 4px 12px;
+            background: #f0f0f0;
+            border: 1px solid #d9d9d9;
+            border-radius: 4px;
+            font-size: 13px;
+            color: rgba(0, 0, 0, 0.88);
+            line-height: 20px;
+            cursor: default;
+        }
+
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px;
+            margin-top: 32px;
+            padding-top: 24px;
+            border-top: 1px solid #f0f0f0;
+        }
+
+        .btn {
+            padding: 6.4px 15px;
+            border: 1px solid #d9d9d9;
+            border-radius: 6px;
+            font-size: 14px;
+            line-height: 1.5715;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: #fff;
+            color: rgba(0, 0, 0, 0.88);
+            box-shadow: 0 2px 0 rgba(0, 0, 0, 0.02);
+        }
+
+        .btn:hover {
+            color: #4096ff;
+            border-color: #4096ff;
+        }
+
+        .btn:active {
+            color: #0958d9;
+            border-color: #0958d9;
+        }
+
+        .btn-primary {
+            background: #1890ff;
+            color: #fff;
+            border-color: #1890ff;
+            box-shadow: 0 2px 0 rgba(5, 145, 255, 0.1);
+        }
+
+        .btn-primary:hover {
+            background: #40a9ff;
+            border-color: #40a9ff;
+        }
+
+        .btn-primary:active {
+            background: #0958d9;
+            border-color: #0958d9;
+        }
+
+        /* 滚动条样式 */
+        .chat-content::-webkit-scrollbar,
+        .config-panel::-webkit-scrollbar,
+        .sidebar::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .chat-content::-webkit-scrollbar-track,
+        .config-panel::-webkit-scrollbar-track,
+        .sidebar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .chat-content::-webkit-scrollbar-thumb,
+        .config-panel::-webkit-scrollbar-thumb,
+        .sidebar::-webkit-scrollbar-thumb {
+            background: #ccc;
+            border-radius: 4px;
+        }
+
+        .chat-content::-webkit-scrollbar-thumb:hover,
+        .config-panel::-webkit-scrollbar-thumb:hover,
+        .sidebar::-webkit-scrollbar-thumb:hover {
+            background: #999;
+        }
+
+        /* 上传图片预览 */
+        .image-preview {
+            margin-top: 8px;
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .image-preview-item {
+            position: relative;
+            width: 80px;
+            height: 80px;
+            border-radius: 6px;
+            overflow: hidden;
+            border: 1px solid #e0e0e0;
+        }
+
+        .image-preview-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .image-preview-item .remove-btn {
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: rgba(0, 0, 0, 0.6);
+            color: white;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+                font-size: 12px;
+        }
+
+        /* 作业预览模态框样式 */
+        .homework-preview-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.45);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .homework-preview-modal.active {
+            display: flex;
+        }
+
+        .homework-preview-content {
+            background: white;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 800px;
+            max-height: 90vh;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .homework-preview-header {
+            padding: 16px 24px;
+            border-bottom: 1px solid #f0f0f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .homework-preview-header h3 {
+            margin: 0;
+            font-size: 16px;
+            font-weight: 600;
+            color: rgba(0, 0, 0, 0.88);
+        }
+
+        .homework-preview-close {
+            width: 22px;
+            height: 22px;
+            border: none;
+            background: transparent;
+            font-size: 18px;
+            color: rgba(0, 0, 0, 0.45);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+
+        .homework-preview-close:hover {
+            background: #f5f5f5;
+            color: rgba(0, 0, 0, 0.88);
+        }
+
+        .homework-preview-body {
+            padding: 24px;
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        .preview-item {
+            margin-bottom: 20px;
+        }
+
+        .preview-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .preview-label {
+            font-weight: 600;
+            color: rgba(0, 0, 0, 0.88);
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .preview-value {
+            color: rgba(0, 0, 0, 0.65);
+            font-size: 14px;
+            line-height: 1.5715;
+        }
+
+        .preview-tags {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .preview-tag {
+            padding: 4px 12px;
+            background: #f0f0f0;
+            border: 1px solid #d9d9d9;
+            border-radius: 4px;
+            font-size: 13px;
+            color: rgba(0, 0, 0, 0.88);
+        }
+
+        .homework-view-btn:hover {
+            background: #40a9ff !important;
+            box-shadow: 0 2px 4px rgba(5, 145, 255, 0.2);
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 200px;
+            }
+
+            .message {
+                max-width: 85%;
+            }
+
+            .homework-preview-content {
+                width: 95%;
+                max-height: 95vh;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 左侧侧边栏 -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <div style="font-weight: 600; color: #333; margin-bottom: 4px;">AI智能教学助手</div>
+            <div style="font-size: 12px;">选择功能模块</div>
+        </div>
+        <div class="menu-list">
+            <div class="menu-item" data-function="history">
+                <span>📋</span>
+                <span>会话记录</span>
+            </div>
+            <div class="menu-item" data-function="prep">
+                <span>📚</span>
+                <span>一键备课</span>
+            </div>
+            <div class="menu-item active" data-function="homework">
+                <span>📝</span>
+                <span>作业布置</span>
+            </div>
+            <div class="menu-item" data-function="analysis">
+                <span>📊</span>
+                <span>学情分析</span>
+            </div>
+            <div class="menu-item" data-function="grading">
+                <span>✏️</span>
+                <span>作文批改</span>
+            </div>
+            <div class="menu-item" data-function="export">
+                <span>📤</span>
+                <span>成绩导出</span>
+            </div>
+            <div class="menu-item" data-function="video">
+                <span>🎥</span>
+                <span>AI视频讲题</span>
+            </div>
+            <div class="menu-item" data-function="ppt">
+                <span>📄</span>
+                <span>课件PPT</span>
+            </div>
+            <div class="menu-item" data-function="graphics">
+                <span>📐</span>
+                <span>数学图形设计</span>
+            </div>
+            <div class="menu-item" data-function="grouping">
+                <span>👥</span>
+                <span>智能分组</span>
+            </div>
+            <div class="menu-item" data-function="plan">
+                <span>📅</span>
+                <span>教学计划</span>
+            </div>
+        </div>
+        <div class="sidebar-footer">
+            <button class="footer-btn" id="myBtn">我的</button>
+        </div>
+        </div>
+
+    <!-- 右侧主内容区 -->
+    <div class="main-content">
+        <div class="content-header">
+            <div class="content-header-left">
+                <h2 id="functionTitle">作业布置</h2>
+                <p id="functionSubtitle">AI自动布置作业,请描述您的要求吧</p>
+            </div>
+            <div class="content-header-actions" id="headerActions">
+                <button class="header-action-btn" id="historyBtn" title="历史记录">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 16px; height: 16px;">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <polyline points="12 6 12 12 16 14"></polyline>
+                    </svg>
+                    <span>历史记录</span>
+                </button>
+                <button class="header-action-btn primary" id="newChatBtn" title="新建会话">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 16px; height: 16px;">
+                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                    </svg>
+                    <span>会话</span>
+                </button>
+            </div>
+        </div>
+        <div class="content-body">
+            <!-- 聊天界面 -->
+            <div class="chat-container" id="chatContainer">
+                <div class="chat-content" id="chatContent">
+                </div>
+
+            <ai-prompt-input>
+                <div class="prompt-input-container">
+                        <input type="file" id="fileInput" class="file-input" accept="image/*" multiple>
+                        <button class="file-upload-btn" id="fileUploadBtn" type="button" title="上传图片">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                                <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                                <polyline points="21 15 16 10 5 21"></polyline>
+                            </svg>
+                        </button>
+                    <div class="prompt-input-wrapper">
+                        <textarea 
+                            id="promptInput" 
+                            class="prompt-input" 
+                                placeholder="请输入您的要求或者语音描述" 
+                            rows="1"
+                        ></textarea>
+                            <div class="image-preview" id="imagePreview"></div>
+                    </div>
+                        <div class="input-actions">
+                            <button class="voice-button" id="voiceBtn" type="button" title="语音输入">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+                            <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                            <line x1="12" y1="19" x2="12" y2="23"></line>
+                            <line x1="8" y1="23" x2="16" y2="23"></line>
+                        </svg>
+                                <span>语音</span>
+                    </button>
+                            <button class="send-button" id="sendButton" type="button">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <line x1="22" y1="2" x2="11" y2="13"></line>
+                                    <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                        </svg>
+                    </button>
+                        </div>
+                </div>
+            </ai-prompt-input>
+            </div>
+
+            <!-- 配置面板 -->
+            <div class="config-panel" id="configPanel">
+                <div class="config-status">
+                    <div class="config-status-left">
+                        <span class="config-status-label">作业</span>
+                        <span>已为您创建如下配置作业,请确认后执行</span>
+                    </div>
+                    <div class="config-status-right" id="configTime">2分钟前</div>
+                </div>
+
+                <div class="config-form">
+                    <div class="form-group">
+                        <label class="form-label">学段学科</label>
+                        <div class="form-row">
+                            <div class="form-group" style="margin-bottom: 0;">
+                                <input type="text" class="form-input" value="数学" readonly>
+                            </div>
+                            <div class="form-group" style="margin-bottom: 0;">
+                                <input type="text" class="form-input" placeholder="请选择" readonly>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">版本分册</label>
+                        <input type="text" class="form-input" value="人教版七年级上册" readonly>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label optional">教辅目录</label>
+                        <select class="form-select" id="textbookCatalog">
+                            <option value="">请选择教辅目录</option>
+                            <option value="第一章 有理数">第一章 有理数</option>
+                            <option value="第二章 整式的加减">第二章 整式的加减</option>
+                            <option value="第三章 一元一次方程">第三章 一元一次方程</option>
+                            <option value="第四章 几何图形初步">第四章 几何图形初步</option>
+                            <option value="第五章 相交线与平行线">第五章 相交线与平行线</option>
+                            <option value="第六章 实数">第六章 实数</option>
+                            <option value="第七章 平面直角坐标系">第七章 平面直角坐标系</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">知识点</label>
+                        <textarea class="form-input form-textarea" readonly>三角形余弦定理</textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">题型</label>
+                        <div class="checkbox-group">
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="type1" checked>
+                                <label for="type1">单选</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="type2" checked>
+                                <label for="type2">多选</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="type3" checked>
+                                <label for="type3">填空</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="type4" checked>
+                                <label for="type4">判断</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="type5" checked>
+                                <label for="type5">解答</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="type6" checked>
+                                <label for="type6">作图</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">数量</label>
+                        <input type="text" class="form-input" value="10" readonly>
+                        <span style="font-size: 13px; color: #999; margin-left: 8px;">道(含小题)</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">作业类型</label>
+                        <div class="radio-group">
+                            <div class="radio-item">
+                                <input type="radio" name="homeworkType" id="typeTimed" checked>
+                                <label for="typeTimed">限时作业</label>
+                            </div>
+                            <div class="radio-item">
+                                <input type="radio" name="homeworkType" id="typeClass">
+                                <label for="typeClass">随堂作业</label>
+                            </div>
+                            <div class="radio-item">
+                                <input type="radio" name="homeworkType" id="typeExam">
+                                <label for="typeExam">考试测验</label>
+                            </div>
+                            <div class="radio-item">
+                                <input type="radio" name="homeworkType" id="typeNormal">
+                                <label for="typeNormal">普通作业</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">发布对象</label>
+                        <div class="tag-group">
+                            <span class="tag">2024级1班A组</span>
+                            <span class="tag">2024级1班B组</span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">发布时间</label>
+                        <input type="text" class="form-input" value="2025-12-08 20:00" readonly>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">其他要求</label>
+                        <textarea class="form-input form-textarea" placeholder="填入补充信息"></textarea>
+                    </div>
+
+                    <div class="form-actions">
+                        <button class="btn" id="cancelBtn">取消</button>
+                        <button class="btn" id="previewBtn">预览</button>
+                        <button class="btn btn-primary" id="publishBtn">发布</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 定义 AI Conversation Web Component
+        class AIConversation extends HTMLElement {
+            constructor() {
+                super();
+            }
+            connectedCallback() {
+                this.setAttribute('role', 'conversation');
+            }
+        }
+        customElements.define('ai-conversation', AIConversation);
+
+        // 定义 AI Message Web Component
+        class AIMessage extends HTMLElement {
+            constructor() {
+                super();
+            }
+            static get observedAttributes() {
+                return ['role'];
+            }
+            connectedCallback() {
+                this.setAttribute('role', this.getAttribute('role') || 'assistant');
+            }
+        }
+        customElements.define('ai-message', AIMessage);
+
+        // 定义 AI Prompt Input Web Component
+        class AIPromptInput extends HTMLElement {
+            constructor() {
+                super();
+            }
+            connectedCallback() {
+                this.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const input = this.querySelector('textarea');
+                    if (input && input.value.trim()) {
+                        this.dispatchEvent(new CustomEvent('message-send', {
+                            detail: { message: input.value.trim() },
+                            bubbles: true
+                        }));
+                    }
+                });
+            }
+        }
+        customElements.define('ai-prompt-input', AIPromptInput);
+
+        // 应用状态
+        const appState = {
+            currentFunction: 'homework',
+            messages: [],
+            uploadedImages: [],
+            isProcessing: false
+        };
+
+        // DOM 元素
+        const chatContent = document.getElementById('chatContent');
+        const chatContainer = document.getElementById('chatContainer');
+        const configPanel = document.getElementById('configPanel');
+        const promptInput = document.getElementById('promptInput');
+        const sendButton = document.getElementById('sendButton');
+        const fileInput = document.getElementById('fileInput');
+        const fileUploadBtn = document.getElementById('fileUploadBtn');
+        const voiceBtn = document.getElementById('voiceBtn');
+        const imagePreview = document.getElementById('imagePreview');
+        const menuItems = document.querySelectorAll('.menu-item');
+        const functionTitle = document.getElementById('functionTitle');
+        const functionSubtitle = document.getElementById('functionSubtitle');
+        const myBtn = document.getElementById('myBtn');
+        const newChatBtn = document.getElementById('newChatBtn');
+        const historyBtn = document.getElementById('historyBtn');
+        const previewBtn = document.getElementById('previewBtn');
+        const publishBtn = document.getElementById('publishBtn');
+        const cancelBtn = document.getElementById('cancelBtn');
+
+        // 功能配置
+        const functionConfig = {
+            history: { 
+                title: '会话记录', 
+                subtitle: '查看历史会话记录',
+                welcomeMessage: '您好！这里是会话记录功能。您可以查看所有历史会话记录。'
+            },
+            prep: { 
+                title: '一键备课', 
+                subtitle: 'AI智能备课助手',
+                welcomeMessage: '您好！我是一键备课助手。请告诉我您需要准备什么课程，我可以帮您快速生成备课方案。'
+            },
+            homework: { 
+                title: '作业布置', 
+                subtitle: 'AI自动布置作业,请描述您的要求吧',
+                welcomeMessage: '您好！我是作业布置助手。请通过语音或文字描述您的作业需求，我也可以处理您上传的图片。让我来帮您布置作业！'
+            },
+            analysis: { 
+                title: '学情分析', 
+                subtitle: '智能分析学生学习情况',
+                welcomeMessage: '您好！我是学情分析助手。我可以帮您分析学生的学习情况，生成详细的分析报告。'
+            },
+            grading: { 
+                title: '作文批改', 
+                subtitle: 'AI智能批改作文',
+                welcomeMessage: '您好！我是作文批改助手。请上传学生的作文，我可以帮您进行智能批改和评分。'
+            },
+            export: { 
+                title: '成绩导出', 
+                subtitle: '导出学生成绩数据',
+                welcomeMessage: '您好！我是成绩导出助手。我可以帮您导出学生的成绩数据，支持多种格式。'
+            },
+            video: { 
+                title: 'AI视频讲题', 
+                subtitle: '生成视频讲解题目',
+                welcomeMessage: '您好！我是AI视频讲题助手。请提供题目信息，我可以为您生成视频讲解。'
+            },
+            ppt: { 
+                title: '课件PPT', 
+                subtitle: '智能生成课件PPT',
+                welcomeMessage: '您好！我是课件PPT助手。请告诉我您的课程主题和内容，我可以帮您生成精美的PPT课件。'
+            },
+            graphics: { 
+                title: '数学图形设计', 
+                subtitle: '设计数学图形',
+                welcomeMessage: '您好！我是数学图形设计助手。请描述您需要的数学图形，我可以帮您设计和绘制。'
+            },
+            grouping: { 
+                title: '智能分组', 
+                subtitle: '智能分组学生',
+                welcomeMessage: '您好！我是智能分组助手。我可以根据学生的特点和学习情况，帮您进行智能分组。'
+            },
+            plan: { 
+                title: '教学计划', 
+                subtitle: '制定教学计划',
+                welcomeMessage: '您好！我是教学计划助手。请告诉我您的教学目标和课程安排，我可以帮您制定详细的教学计划。'
+            }
+        };
+
+        // 切换功能
+        function switchFunction(functionName, keepMessages = false) {
+            appState.currentFunction = functionName;
+            
+            // 更新菜单激活状态
+            menuItems.forEach(item => {
+                if (item.dataset.function === functionName) {
+                    item.classList.add('active');
+                } else {
+                    item.classList.remove('active');
+                }
+            });
+
+            // 更新标题
+            const config = functionConfig[functionName] || functionConfig.homework;
+            functionTitle.textContent = config.title;
+            functionSubtitle.textContent = config.subtitle;
+
+            // 重置配置面板状态
+            appState.showConfig = false;
+
+            // 根据功能显示不同界面
+            if (functionName === 'homework' && appState.showConfig) {
+                // 显示配置面板
+                chatContainer.style.display = 'none';
+                configPanel.classList.add('active');
+            } else {
+                // 显示聊天界面
+                chatContainer.style.display = 'flex';
+                configPanel.classList.remove('active');
+                
+                // 如果不是保持消息，则清空并显示欢迎消息
+                if (!keepMessages) {
+                    chatContent.innerHTML = '';
+                    appState.messages = [];
+                    appState.uploadedImages = [];
+                    imagePreview.innerHTML = '';
+                    
+                    // 添加欢迎消息
+                    const welcomeMsg = config.welcomeMessage || '您好！我可以帮助您。';
+                    addMessage('assistant', welcomeMsg);
+                }
+            }
+        }
+
+        // 菜单项点击事件
+        menuItems.forEach(item => {
+            item.addEventListener('click', () => {
+                switchFunction(item.dataset.function);
+            });
+        });
+
+        // 自动调整文本域高度
+        function autoResizeTextarea(textarea) {
+            textarea.style.height = 'auto';
+            textarea.style.height = Math.min(textarea.scrollHeight, 120) + 'px';
+        }
+
+        promptInput.addEventListener('input', () => {
+            autoResizeTextarea(promptInput);
+        });
+
+        // 获取相对时间
+        function getRelativeTime() {
+            return '刚刚';
+        }
+
+        // 添加消息到对话
+        function addMessage(role, content, images = []) {
+            const messageDiv = document.createElement('ai-message');
+            messageDiv.setAttribute('role', role);
+            
+            const time = getRelativeTime();
+            let imageHTML = '';
+            if (images && images.length > 0) {
+                imageHTML = '<div style="margin-top: 8px; display: flex; gap: 8px; flex-wrap: wrap;">';
+                images.forEach(img => {
+                    imageHTML += `<img src="${img}" style="max-width: 200px; max-height: 200px; border-radius: 6px; border: 1px solid #e0e0e0;" />`;
+                });
+                imageHTML += '</div>';
+            }
+            
+            const messageHTML = `
+                <div class="message ${role}">
+                    <div class="message-avatar">${role === 'user' ? '我' : 'AI'}</div>
+                    <div>
+                        <div class="message-content">${content.replace(/\n/g, '<br>')}${imageHTML}</div>
+                        <div class="message-time">${time}</div>
+                    </div>
+                </div>
+            `;
+            
+            messageDiv.innerHTML = messageHTML;
+            chatContent.appendChild(messageDiv);
+            
+            // 滚动到底部
+            setTimeout(() => {
+                chatContent.scrollTop = chatContent.scrollHeight;
+            }, 100);
+        }
+
+        // 显示加载指示器
+        function showTypingIndicator() {
+            const typingDiv = document.createElement('div');
+            typingDiv.id = 'typingIndicator';
+            typingDiv.className = 'message assistant';
+            typingDiv.innerHTML = `
+                <div class="message-avatar">AI</div>
+                <div>
+                    <div class="typing-indicator">
+                        <div class="typing-dots">
+                            <div class="typing-dot"></div>
+                            <div class="typing-dot"></div>
+                            <div class="typing-dot"></div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            chatContent.appendChild(typingDiv);
+            chatContent.scrollTop = chatContent.scrollHeight;
+        }
+
+        // 隐藏加载指示器
+        function hideTypingIndicator() {
+            const typingIndicator = document.getElementById('typingIndicator');
+            if (typingIndicator) {
+                typingIndicator.remove();
+            }
+        }
+
+        // 处理作业布置请求
+        async function handleHomeworkRequest(userMessage, images) {
+            // 检查是否是作业布置请求
+            const homeworkKeywords = ['作业', '布置', '发布', '题目', '题目', '班级', '组'];
+            const isHomeworkRequest = homeworkKeywords.some(keyword => userMessage.includes(keyword));
+
+            if (isHomeworkRequest && appState.currentFunction === 'homework') {
+                // 显示任务规划
+                await new Promise(resolve => setTimeout(resolve, 500));
+                hideTypingIndicator();
+                
+                const taskListHTML = `
+                    <div class="message assistant">
+                        <div class="message-avatar">AI</div>
+                        <div>
+                            <div class="message-content">
+                                正在帮您规划任务....
+                                <div class="task-list">
+                                    <div class="task-list-title">任务清单:</div>
+                                    <div class="task-item">
+                                        <input type="checkbox" class="task-checkbox" disabled>
+                                        <span>获取"我"的任课信息与使用教材版本,确认题库与章节课时</span>
+                                    </div>
+                                    <div class="task-item">
+                                        <input type="checkbox" class="task-checkbox" disabled>
+                                        <span>获取班级与分组信息</span>
+                                    </div>
+                                    <div class="task-item">
+                                        <input type="checkbox" class="task-checkbox" disabled>
+                                        <span>生成作业配置:作业名称、发布对象、定时、限时等配置</span>
+                                    </div>
+                                </div>
+                                <div class="tool-monitor">
+                                    <div class="tool-monitor-title">此处是工具调用ing监控滚动列表</div>
+                                    <div class="tool-item">
+                                        <span>user="教师姓名"&class="2024级1班"&group="A&B"</span>
+                                        <span class="tool-status success">执行成功</span>
+                                    </div>
+                                    <div class="tool-item">
+                                        <span>user="教师姓名"&class="2024级1班"&group="A&B"</span>
+                                        <span class="tool-status success">执行成功</span>
+                                    </div>
+                                    <div class="tool-item">
+                                        <span>user="教师姓名"&class="2024级1班"&group="A&B"</span>
+                                        <span class="tool-status processing">进行中</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="message-time">刚刚</div>
+                        </div>
+                    </div>
+                `;
+                
+                const messageDiv = document.createElement('ai-message');
+                messageDiv.setAttribute('role', 'assistant');
+                messageDiv.innerHTML = taskListHTML;
+                chatContent.appendChild(messageDiv);
+                
+                // 模拟任务执行完成，切换到配置面板
+                setTimeout(() => {
+                    // 更新任务状态
+                    const checkboxes = messageDiv.querySelectorAll('.task-checkbox');
+                    checkboxes.forEach(cb => cb.checked = true);
+                    
+                    // 切换到配置面板
+                    setTimeout(() => {
+                        chatContainer.style.display = 'none';
+                        configPanel.classList.add('active');
+                        appState.showConfig = true;
+                    }, 1000);
+                }, 2000);
+                
+                return;
+            }
+
+            // 普通回复
+            hideTypingIndicator();
+                    const responses = [
+                `我理解您说的是："${userMessage}"。让我来帮您处理。`,
+                `关于"${userMessage}"，我可以为您提供帮助。`,
+                `感谢您的提问："${userMessage}"。让我来分析一下。`
+                    ];
+                    const randomResponse = responses[Math.floor(Math.random() * responses.length)];
+            addMessage('assistant', randomResponse);
+        }
+
+        // 发送消息
+        async function sendMessage() {
+            const messageText = promptInput.value.trim();
+            const images = [...appState.uploadedImages];
+            
+            if (!messageText && images.length === 0) return;
+
+            // 添加用户消息
+            if (messageText) {
+                addMessage('user', messageText, images);
+                appState.messages.push({ role: 'user', content: messageText, images });
+            }
+
+            // 清空输入框和图片
+            promptInput.value = '';
+            promptInput.style.height = 'auto';
+            appState.uploadedImages = [];
+            imagePreview.innerHTML = '';
+            
+            // 禁用发送按钮
+            sendButton.disabled = true;
+            appState.isProcessing = true;
+
+            // 显示加载指示器
+            showTypingIndicator();
+
+            try {
+                // 处理请求
+                await handleHomeworkRequest(messageText, images);
+            } catch (error) {
+                hideTypingIndicator();
+                addMessage('assistant', '抱歉，发生了一个错误。请稍后再试。');
+                console.error('发送消息错误:', error);
+            } finally {
+                // 启用发送按钮
+                sendButton.disabled = false;
+                appState.isProcessing = false;
+                promptInput.focus();
+            }
+        }
+
+        // 发送按钮点击事件
+        sendButton.addEventListener('click', sendMessage);
+
+        // 回车键发送（Shift+Enter 换行）
+        promptInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+            }
+        });
+
+        // 文件上传
+        fileUploadBtn.addEventListener('click', () => {
+            fileInput.click();
+        });
+
+        fileInput.addEventListener('change', (e) => {
+            const files = Array.from(e.target.files);
+            files.forEach(file => {
+                if (file.type.startsWith('image/')) {
+                    const reader = new FileReader();
+                    reader.onload = (event) => {
+                        const imageUrl = event.target.result;
+                        appState.uploadedImages.push(imageUrl);
+                        
+                        const imageItem = document.createElement('div');
+                        imageItem.className = 'image-preview-item';
+                        imageItem.innerHTML = `
+                            <img src="${imageUrl}" alt="预览">
+                            <button class="remove-btn" onclick="this.parentElement.remove(); appState.uploadedImages = appState.uploadedImages.filter(img => img !== '${imageUrl}');">×</button>
+                        `;
+                        imagePreview.appendChild(imageItem);
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+            fileInput.value = '';
+        });
+
+        // 语音输入（模拟）
+        voiceBtn.addEventListener('click', () => {
+            if (appState.isRecording) {
+                // 停止录音
+                appState.isRecording = false;
+                voiceBtn.style.background = 'white';
+                alert('语音输入功能：模拟停止录音');
+            } else {
+                // 开始录音
+                appState.isRecording = true;
+                voiceBtn.style.background = '#ff4d4f';
+                alert('语音输入功能：模拟开始录音，请说话...');
+            }
+        });
+
+        // 我的按钮
+        myBtn.addEventListener('click', () => {
+            alert('我的：查看个人信息和设置');
+        });
+
+        // 新建会话按钮
+        newChatBtn.addEventListener('click', () => {
+            if (confirm('确定要新建会话吗？当前会话将被清空。')) {
+                const currentFunction = appState.currentFunction;
+                chatContent.innerHTML = '';
+                appState.messages = [];
+                appState.uploadedImages = [];
+                imagePreview.innerHTML = '';
+                appState.showConfig = false;
+                chatContainer.style.display = 'flex';
+                configPanel.classList.remove('active');
+                
+                // 添加当前功能的欢迎消息
+                const config = functionConfig[currentFunction] || functionConfig.homework;
+                addMessage('assistant', config.welcomeMessage || '您好！我可以帮助您。');
+            }
+        });
+
+        // 历史记录按钮
+        historyBtn.addEventListener('click', () => {
+            alert('历史记录功能：查看当前助理的历史会话记录');
+            // 这里可以打开历史记录面板或弹窗
+        });
+
+        // 预览按钮
+        previewBtn.addEventListener('click', () => {
+            alert('预览功能：查看作业预览效果');
+        });
+
+        // 取消按钮
+        cancelBtn.addEventListener('click', () => {
+            if (confirm('确定要取消本次配置吗？将返回聊天界面。')) {
+                appState.showConfig = false;
+                chatContainer.style.display = 'flex';
+                configPanel.classList.remove('active');
+                
+                // 添加提示消息
+                addMessage('assistant', '已取消本次作业配置，您可以重新描述您的需求。');
+            }
+        });
+
+        // 存储已发布的作业配置
+        let publishedHomeworkConfig = null;
+
+        // 发布按钮
+        publishBtn.addEventListener('click', () => {
+            if (confirm('确定要发布这份作业吗？')) {
+                // 收集配置信息 - 使用更精确的选择器
+                const form = document.querySelector('.config-form');
+                const subjectInputs = form.querySelectorAll('.form-row .form-input');
+                const subject = Array.from(subjectInputs).map(input => input.value).filter(Boolean).join(' - ');
+                
+                const configData = {
+                    subject: subject || '',
+                    version: Array.from(form.querySelectorAll('.form-group')).find(g => {
+                        const label = g.querySelector('label');
+                        return label && label.textContent.includes('版本分册');
+                    })?.querySelector('.form-input')?.value || '',
+                    catalog: document.getElementById('textbookCatalog')?.value || '',
+                    knowledge: form.querySelector('textarea.form-textarea[readonly]')?.value || '',
+                    questionTypes: Array.from(form.querySelectorAll('.checkbox-item input:checked')).map(cb => {
+                        const label = cb.nextElementSibling;
+                        return label?.textContent?.trim();
+                    }).filter(Boolean),
+                    count: Array.from(form.querySelectorAll('.form-group')).find(g => {
+                        const label = g.querySelector('label');
+                        return label && label.textContent.includes('数量');
+                    })?.querySelector('.form-input')?.value || '',
+                    homeworkType: (() => {
+                        const checked = form.querySelector('input[name="homeworkType"]:checked');
+                        return checked?.nextElementSibling?.textContent?.trim() || '';
+                    })(),
+                    publishTarget: Array.from(form.querySelectorAll('.tag')).map(tag => tag.textContent?.trim()).filter(Boolean),
+                    publishTime: Array.from(form.querySelectorAll('.form-group')).find(g => {
+                        const label = g.querySelector('label');
+                        return label && label.textContent.includes('发布时间');
+                    })?.querySelector('.form-input')?.value || '',
+                    otherRequirements: form.querySelector('textarea.form-textarea:not([readonly])')?.value || ''
+                };
+                publishedHomeworkConfig = configData;
+
+                // 发布成功后，返回聊天界面并显示消息和查看按钮
+                appState.showConfig = false;
+                chatContainer.style.display = 'flex';
+                configPanel.classList.remove('active');
+                
+                // 添加发布成功的消息，包含查看按钮
+                const messageDiv = document.createElement('ai-message');
+                messageDiv.setAttribute('role', 'assistant');
+                const time = getRelativeTime();
+                const messageHTML = `
+                    <div class="message assistant">
+                        <div class="message-avatar">AI</div>
+                        <div>
+                            <div class="message-content">
+                                <div>作业已成功发布！</div>
+                                <button class="homework-view-btn" onclick="showHomeworkPreview()" style="
+                                    margin-top: 12px;
+                                    padding: 6px 16px;
+                                    background: #1890ff;
+                                    color: white;
+                                    border: none;
+                                    border-radius: 6px;
+                                    font-size: 14px;
+                                    cursor: pointer;
+                                    transition: all 0.2s;
+                                    box-shadow: 0 2px 0 rgba(5, 145, 255, 0.1);
+                                ">查看作业详情</button>
+                            </div>
+                            <div class="message-time">${time}</div>
+                        </div>
+                    </div>
+                `;
+                messageDiv.innerHTML = messageHTML;
+                chatContent.appendChild(messageDiv);
+                
+                // 滚动到底部
+                setTimeout(() => {
+                    chatContent.scrollTop = chatContent.scrollHeight;
+                }, 100);
+            }
+        });
+
+        // 作业预览功能
+        function showHomeworkPreview() {
+            if (!publishedHomeworkConfig) {
+                alert('暂无作业配置信息');
+                return;
+            }
+
+            // 创建模态框
+            let modal = document.getElementById('homeworkPreviewModal');
+            if (!modal) {
+                modal = document.createElement('div');
+                modal.id = 'homeworkPreviewModal';
+                modal.className = 'homework-preview-modal';
+                modal.innerHTML = `
+                    <div class="homework-preview-content">
+                        <div class="homework-preview-header">
+                            <h3>作业详情预览</h3>
+                            <button class="homework-preview-close" onclick="closeHomeworkPreview()">×</button>
+                        </div>
+                        <div class="homework-preview-body" id="homeworkPreviewBody">
+                            <!-- 内容将通过JavaScript动态填充 -->
+                        </div>
+                    </div>
+                `;
+                document.body.appendChild(modal);
+                
+                // 点击遮罩层关闭
+                modal.addEventListener('click', (e) => {
+                    if (e.target === modal) {
+                        closeHomeworkPreview();
+                    }
+                });
+            }
+
+            // 填充预览内容
+            const body = document.getElementById('homeworkPreviewBody');
+            const config = publishedHomeworkConfig;
+            body.innerHTML = `
+                <div class="preview-item">
+                    <div class="preview-label">学段学科</div>
+                    <div class="preview-value">${config.subject}</div>
+                </div>
+                <div class="preview-item">
+                    <div class="preview-label">版本分册</div>
+                    <div class="preview-value">${config.version}</div>
+                </div>
+                ${config.catalog ? `
+                <div class="preview-item">
+                    <div class="preview-label">教辅目录</div>
+                    <div class="preview-value">${config.catalog}</div>
+                </div>
+                ` : ''}
+                <div class="preview-item">
+                    <div class="preview-label">知识点</div>
+                    <div class="preview-value">${config.knowledge}</div>
+                </div>
+                <div class="preview-item">
+                    <div class="preview-label">题型</div>
+                    <div class="preview-tags">
+                        ${config.questionTypes.map(type => `<span class="preview-tag">${type}</span>`).join('')}
+                    </div>
+                </div>
+                <div class="preview-item">
+                    <div class="preview-label">数量</div>
+                    <div class="preview-value">${config.count} 道(含小题)</div>
+                </div>
+                <div class="preview-item">
+                    <div class="preview-label">作业类型</div>
+                    <div class="preview-value">${config.homeworkType}</div>
+                </div>
+                <div class="preview-item">
+                    <div class="preview-label">发布对象</div>
+                    <div class="preview-tags">
+                        ${config.publishTarget.map(target => `<span class="preview-tag">${target}</span>`).join('')}
+                    </div>
+                </div>
+                <div class="preview-item">
+                    <div class="preview-label">发布时间</div>
+                    <div class="preview-value">${config.publishTime}</div>
+                </div>
+                ${config.otherRequirements ? `
+                <div class="preview-item">
+                    <div class="preview-label">其他要求</div>
+                    <div class="preview-value">${config.otherRequirements}</div>
+                </div>
+                ` : ''}
+            `;
+
+            // 显示模态框
+            modal.classList.add('active');
+        }
+
+        // 关闭作业预览
+        function closeHomeworkPreview() {
+            const modal = document.getElementById('homeworkPreviewModal');
+            if (modal) {
+                modal.classList.remove('active');
+            }
+        }
+
+        // 将函数暴露到全局作用域，以便HTML中的onclick可以使用
+        window.showHomeworkPreview = showHomeworkPreview;
+        window.closeHomeworkPreview = closeHomeworkPreview;
+
+        // 初始化 - 显示欢迎消息
+        const initialConfig = functionConfig[appState.currentFunction] || functionConfig.homework;
+        addMessage('assistant', initialConfig.welcomeMessage || '您好！我可以帮助您。');
+        promptInput.focus();
+    </script>
+</body>
+</html>
