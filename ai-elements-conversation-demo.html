@@ -65,6 +65,16 @@
             font-weight: 500;
         }
 
+        .menu-demo-tag {
+            margin-left: auto;
+            padding: 2px 8px;
+            border-radius: 999px;
+            border: 1px solid #f97316;
+            font-size: 10px;
+            color: #ea580c;
+            background: #fff7ed;
+        }
+
         .sidebar-footer {
             padding: 12px 16px;
             border-top: 1px solid #f0f0f0;
@@ -172,17 +182,100 @@
 
         /* 聊天界面样式 */
         .chat-container {
-            display: flex;
+            position: fixed;
+            right: 32px;
+            bottom: 40px;
+            top: 40px;
+            width: 420px;
+            max-width: calc(100% - 80px);
+            display: none;
             flex-direction: column;
-            height: 100%;
             background: #fafafa;
+            border-radius: 16px;
+            box-shadow: 0 18px 40px rgba(15, 23, 42, 0.35);
+            z-index: 900;
+            overflow: hidden;
+        }
+
+        .chat-header {
+            flex-shrink: 0;
+            padding: 16px 20px;
+            background: #ffffff;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .chat-header-left {
+            min-width: 0;
+        }
+
+        .chat-header-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: #111827;
+            margin-bottom: 4px;
+        }
+
+        .chat-header-subtitle {
+            font-size: 12px;
+            color: #6b7280;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            overflow: hidden;
+        }
+
+        .chat-header-right {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .chat-header-btn {
+            padding: 6px 12px;
+            border-radius: 999px;
+            border: 1px solid #e5e7eb;
+            background: #f9fafb;
+            font-size: 12px;
+            color: #374151;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .chat-header-btn:hover {
+            background: #eef2ff;
+            border-color: #6366f1;
+            color: #3730a3;
+        }
+
+        .chat-header-icon-btn {
+            width: 28px;
+            height: 28px;
+            border-radius: 999px;
+            border: 1px solid #e5e7eb;
+            background: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 16px;
+            color: #6b7280;
+            transition: all 0.2s;
+        }
+
+        .chat-header-icon-btn:hover {
+            background: #fee2e2;
+            border-color: #f87171;
+            color: #b91c1c;
         }
 
         .chat-content {
             flex: 1;
             overflow-y: auto;
             overflow-x: hidden;
-            padding: 24px;
+            padding: 20px 20px 16px;
             display: flex;
             flex-direction: column;
             gap: 16px;
@@ -248,23 +341,22 @@
         }
 
         .message-content {
-            background: white;
+            background: #e5e7eb;
             padding: 12px 16px;
-            border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            border-radius: 8px;
             line-height: 1.6;
             word-wrap: break-word;
             position: relative;
         }
 
         .message.user .message-content {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
+            background: #e5e7eb;
+            color: #111827;
         }
 
         .message.assistant .message-content {
-            background: white;
-            color: #333;
+            background: #e5e7eb;
+            color: #111827;
         }
 
         .message-time {
@@ -315,6 +407,41 @@
             flex-shrink: 0;
         }
 
+        /* 消息内操作按钮组 */
+        .message-actions {
+            margin-top: 10px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .message-action-btn {
+            padding: 6px 14px;
+            border-radius: 999px;
+            border: 1px solid #d4d4d8;
+            background: #ffffff;
+            font-size: 12px;
+            color: #4b5563;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .message-action-btn:hover {
+            background: #f3f4f6;
+            border-color: #9ca3af;
+        }
+
+        .message-action-btn.primary {
+            background: #111827;
+            border-color: #111827;
+            color: #ffffff;
+        }
+
+        .message-action-btn.primary:hover {
+            background: #020617;
+            border-color: #020617;
+        }
+
         /* 工具调用监控列表 */
         .tool-monitor {
             margin-top: 12px;
@@ -362,6 +489,35 @@
             color: #faad14;
         }
 
+        /* 页面工作区占位，用于模拟业务页面 */
+        .page-work-area {
+            flex: 1;
+            background: #f0f2f5;
+            border-radius: 12px;
+            margin: 16px 24px 24px;
+            border: 1px dashed #d4d4d8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #9ca3af;
+            font-size: 14px;
+        }
+
+        .page-work-area-inner {
+            text-align: center;
+        }
+
+        .page-work-area-title {
+            font-size: 16px;
+            margin-bottom: 6px;
+            color: #6b7280;
+        }
+
+        .page-work-area-desc {
+            font-size: 12px;
+            color: #9ca3af;
+        }
+
         /* 输入区域 */
         ai-prompt-input {
             display: block;
@@ -371,10 +527,42 @@
         }
 
         .prompt-input-container {
-            padding: 16px 24px;
+            padding: 16px 20px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .system-shortcuts {
             display: flex;
             gap: 12px;
-            align-items: flex-end;
+        }
+
+        .system-shortcut-btn {
+            flex: 1;
+            height: 34px;
+            border-radius: 999px;
+            border: 1px solid #d4d4d8;
+            background: #ffffff;
+            font-size: 13px;
+            color: #4b5563;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .system-shortcut-btn:hover {
+            background: #f3f4f6;
+            border-color: #9ca3af;
+        }
+
+        .prototype-input-shell {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 10px 6px 12px;
+            border-radius: 999px;
+            background: #f5f5f5;
+            border: 1px solid #e5e7eb;
         }
 
         .prompt-input-wrapper {
@@ -384,86 +572,65 @@
 
         .prompt-input {
             width: 100%;
-            min-height: 44px;
-            max-height: 120px;
-            padding: 12px 16px;
-            border: 1px solid #e0e0e0;
-            border-radius: 8px;
+            min-height: 34px;
+            max-height: 80px;
+            padding: 8px 4px;
+            border: none;
+            border-radius: 999px;
             font-size: 14px;
             font-family: inherit;
             resize: none;
             outline: none;
-            transition: border-color 0.3s;
-            background: #fafafa;
-        }
-
-        .prompt-input:focus {
-            border-color: #1890ff;
-            background: white;
+            background: transparent;
         }
 
         .prompt-input::placeholder {
-            color: #999;
+            color: #9ca3af;
         }
 
-        .input-actions {
-            display: flex;
-            gap: 8px;
-            align-items: center;
-        }
-
-        .voice-button {
-            width: 44px;
-            height: 44px;
-            border: 1px solid #e0e0e0;
+        .voice-button,
+        .file-upload-btn,
+        .send-button {
+            width: 32px;
+            height: 32px;
             border-radius: 50%;
-            background: white;
-            color: #666;
+            border: 1px solid #d4d4d8;
+            background: #ffffff;
+            color: #6b7280;
             cursor: pointer;
             display: flex;
-            flex-direction: column;
             align-items: center;
             justify-content: center;
-            transition: all 0.2s;
             flex-shrink: 0;
-            font-size: 10px;
-            gap: 2px;
+            transition: all 0.2s;
         }
 
-        .voice-button:hover {
-            background: #f5f5f5;
-            border-color: #1890ff;
-            color: #1890ff;
+        .voice-button svg,
+        .file-upload-btn svg,
+        .send-button svg {
+            width: 16px;
+            height: 16px;
         }
 
-        .voice-button svg {
-            width: 18px;
-            height: 18px;
+        .voice-button:hover,
+        .file-upload-btn:hover {
+            background: #f3f4f6;
+            border-color: #9ca3af;
         }
 
         .send-button {
-            width: 44px;
-            height: 44px;
-            border: none;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: transform 0.2s, box-shadow 0.2s;
-            flex-shrink: 0;
-            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+            background: #111827;
+            color: #ffffff;
+            border-color: #111827;
         }
 
         .send-button:hover:not(:disabled) {
-            transform: scale(1.05);
-            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+            background: #020617;
+            border-color: #020617;
         }
 
         .send-button:disabled {
-            opacity: 0.5;
+            opacity: 0.4;
             cursor: not-allowed;
         }
 
@@ -500,6 +667,13 @@
 
         .file-input {
             display: none;
+        }
+
+        .bottom-hint {
+            margin-top: 2px;
+            font-size: 11px;
+            color: #9ca3af;
+            text-align: center;
         }
 
         /* 加载指示器 */
@@ -970,6 +1144,323 @@
             box-shadow: 0 2px 4px rgba(5, 145, 255, 0.2);
         }
 
+        /* 悬浮主入口 */
+        .ai-fab {
+            position: fixed;
+            right: 40px;
+            bottom: 40px;
+            z-index: 950;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+        }
+
+        .ai-fab-main {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            border: none;
+            background: radial-gradient(circle at 30% 30%, #f9fafb 0, #e5e7eb 25%, #4f46e5 70%, #7c3aed 100%);
+            color: #ffffff;
+            box-shadow: 0 12px 30px rgba(88, 80, 236, 0.55);
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 2px;
+            transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
+        }
+
+        .ai-fab-main:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 16px 40px rgba(79, 70, 229, 0.75);
+        }
+
+        .ai-fab-main span {
+            font-size: 11px;
+            opacity: 0.9;
+        }
+
+        .ai-fab-menu {
+            display: none;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .ai-fab-menu.open {
+            display: flex;
+        }
+
+        .ai-fab-item {
+            padding: 8px 14px;
+            border-radius: 999px;
+            border: 1px solid #e5e7eb;
+            background: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 4px 14px rgba(15, 23, 42, 0.2);
+            font-size: 12px;
+            color: #374151;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            backdrop-filter: blur(10px);
+            white-space: nowrap;
+            transition: all 0.2s;
+        }
+
+        .ai-fab-item:hover {
+            border-color: #6366f1;
+            color: #3730a3;
+            background: #eef2ff;
+        }
+
+        .ai-fab-item-tag {
+            padding: 2px 6px;
+            border-radius: 999px;
+            background: #eef2ff;
+            color: #4f46e5;
+            font-size: 10px;
+        }
+
+        /* 我的空间 */
+        .my-space-panel {
+            position: absolute;
+            inset: 0;
+            background: #f5f5f5;
+            display: none;
+            z-index: 10;
+        }
+
+        .chat-container.my-space-open .my-space-panel {
+            display: flex;
+        }
+
+        .chat-container.my-space-open .chat-header,
+        .chat-container.my-space-open .chat-content,
+        .chat-container.my-space-open ai-prompt-input {
+            display: none;
+        }
+
+        .my-space-content {
+            width: 100%;
+            height: 100%;
+            background: #f5f5f5;
+            border-radius: 0;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            border-left: 1px solid #e5e7eb;
+            border-right: 1px solid #e5e7eb;
+        }
+
+        .my-space-header {
+            display: flex;
+            align-items: center;
+            padding: 14px 24px;
+            background: #ffffff;
+            border-bottom: 1px solid #e5e7eb;
+            gap: 16px;
+        }
+
+        .my-space-back {
+            padding: 4px 10px;
+            border-radius: 999px;
+            border: 1px solid #e5e7eb;
+            background: #f9fafb;
+            font-size: 12px;
+            cursor: pointer;
+            color: #374151;
+            transition: all 0.2s;
+        }
+
+        .my-space-back:hover {
+            background: #eff6ff;
+            border-color: #60a5fa;
+            color: #1d4ed8;
+        }
+
+        .my-space-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #111827;
+            flex: 1;
+        }
+
+        .my-space-tabs {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .my-space-tab {
+            padding: 6px 14px;
+            border-radius: 999px;
+            border: 1px solid transparent;
+            background: transparent;
+            font-size: 13px;
+            cursor: pointer;
+            color: #6b7280;
+            transition: all 0.2s;
+        }
+
+        .my-space-tab.active {
+            background: #eff6ff;
+            border-color: #60a5fa;
+            color: #1d4ed8;
+        }
+
+        .my-space-body {
+            padding: 20px 24px 24px;
+            overflow-y: auto;
+        }
+
+        .my-space-section {
+            display: none;
+        }
+
+        .my-space-section.active {
+            display: block;
+        }
+
+        .my-settings-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .my-setting-card {
+            background: #ffffff;
+            border-radius: 10px;
+            padding: 16px 18px;
+            box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08);
+            border: 1px solid #e5e7eb;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+        }
+
+        .my-setting-meta {
+            flex: 1;
+        }
+
+        .my-setting-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #111827;
+            margin-bottom: 4px;
+        }
+
+        .my-setting-desc {
+            font-size: 12px;
+            color: #6b7280;
+        }
+
+        .my-setting-tags {
+            margin-top: 8px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .my-setting-tag {
+            padding: 2px 8px;
+            border-radius: 999px;
+            background: #eff6ff;
+            font-size: 11px;
+            color: #1d4ed8;
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 42px;
+            height: 22px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            inset: 0;
+            background-color: #e5e7eb;
+            border-radius: 999px;
+            transition: 0.2s;
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 2px;
+            top: 2px;
+            background-color: white;
+            border-radius: 50%;
+            box-shadow: 0 1px 3px rgba(15, 23, 42, 0.3);
+            transition: 0.2s;
+        }
+
+        .toggle-switch input:checked + .toggle-slider {
+            background-color: #4ade80;
+        }
+
+        .toggle-switch input:checked + .toggle-slider:before {
+            transform: translateX(20px);
+        }
+
+        .resources-group {
+            margin-bottom: 24px;
+        }
+
+        .resources-group-title {
+            font-size: 13px;
+            color: #6b7280;
+            margin-bottom: 8px;
+        }
+
+        .resources-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 10px;
+        }
+
+        .resource-card {
+            background: #ffffff;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+            padding: 10px 12px;
+            font-size: 12px;
+            color: #374151;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+        .resource-card:hover {
+            border-color: #6366f1;
+            box-shadow: 0 6px 18px rgba(79, 70, 229, 0.25);
+        }
+
+        .resource-name {
+            font-weight: 500;
+        }
+
+        .resource-meta {
+            font-size: 11px;
+            color: #9ca3af;
+        }
+
         /* 响应式设计 */
         @media (max-width: 768px) {
             .sidebar {
@@ -983,6 +1474,23 @@
             .homework-preview-content {
                 width: 95%;
                 max-height: 95vh;
+            }
+
+            .chat-container {
+                right: 16px;
+                left: 16px;
+                width: auto;
+                top: 16px;
+                bottom: 80px;
+            }
+
+            .ai-fab {
+                right: 20px;
+                bottom: 24px;
+            }
+
+            .my-space-content {
+                border-radius: 0;
             }
         }
     </style>
@@ -1006,10 +1514,17 @@
             <div class="menu-item active" data-function="homework">
                 <span>📝</span>
                 <span>作业布置</span>
+                <span class="menu-demo-tag">demo</span>
             </div>
             <div class="menu-item" data-function="analysis">
                 <span>📊</span>
                 <span>学情分析</span>
+                <span class="menu-demo-tag">demo</span>
+            </div>
+            <div class="menu-item" data-function="imageEnhance">
+                <span>🖼️</span>
+                <span>图片美化</span>
+                <span class="menu-demo-tag">demo</span>
             </div>
             <div class="menu-item" data-function="grading">
                 <span>✏️</span>
@@ -1070,49 +1585,157 @@
             </div>
         </div>
         <div class="content-body">
-            <!-- 聊天界面 -->
+            <div class="page-work-area">
+                <div class="page-work-area-inner">
+                    <div class="page-work-area-title">页面工作区</div>
+                    <div class="page-work-area-desc">这里是业务内容区域，AI 助手以悬浮入口形式嵌入在页面侧边。</div>
+                </div>
+            </div>
+
+            <!-- 聊天侧栏窗口 -->
             <div class="chat-container" id="chatContainer">
+                <div class="chat-header">
+                    <div class="chat-header-left">
+                        <div class="chat-header-title" id="chatFeatureTitle">AI助手 · 学情分析</div>
+                        <div class="chat-header-subtitle" id="chatFeatureSubtitle">智能洞察班级学习情况，沉淀分析结论与建议</div>
+                    </div>
+                    <div class="chat-header-right">
+                        <button class="chat-header-btn" id="chatMySpaceBtn">我的空间</button>
+                        <button class="chat-header-icon-btn" id="chatCloseBtn" aria-label="关闭对话">×</button>
+                    </div>
+                </div>
+
                 <div class="chat-content" id="chatContent">
                 </div>
 
-            <ai-prompt-input>
-                <div class="prompt-input-container">
-                        <input type="file" id="fileInput" class="file-input" accept="image/*" multiple>
-                        <button class="file-upload-btn" id="fileUploadBtn" type="button" title="上传图片">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-                                <circle cx="8.5" cy="8.5" r="1.5"></circle>
-                                <polyline points="21 15 16 10 5 21"></polyline>
-                            </svg>
-                        </button>
-                    <div class="prompt-input-wrapper">
-                        <textarea 
-                            id="promptInput" 
-                            class="prompt-input" 
-                                placeholder="请输入您的要求或者语音描述" 
-                            rows="1"
-                        ></textarea>
-                            <div class="image-preview" id="imagePreview"></div>
-                    </div>
-                        <div class="input-actions">
+                <ai-prompt-input>
+                    <div class="prompt-input-container">
+                        <div class="system-shortcuts">
+                            <button class="system-shortcut-btn" id="systemFunc1Btn">系统功能1</button>
+                            <button class="system-shortcut-btn" id="systemFunc2Btn">系统功能2</button>
+                        </div>
+                        <div class="prototype-input-shell">
+                            <input type="file" id="fileInput" class="file-input" accept="image/*" multiple>
+                            <button class="file-upload-btn" id="fileUploadBtn" type="button" title="上传图片">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                                    <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                                    <polyline points="21 15 16 10 5 21"></polyline>
+                                </svg>
+                            </button>
+                            <div class="prompt-input-wrapper">
+                                <textarea
+                                    id="promptInput"
+                                    class="prompt-input"
+                                    placeholder="请输入您的需求或语音描述"
+                                    rows="1"
+                                ></textarea>
+                            </div>
                             <button class="voice-button" id="voiceBtn" type="button" title="语音输入">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
-                            <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
-                            <line x1="12" y1="19" x2="12" y2="23"></line>
-                            <line x1="8" y1="23" x2="16" y2="23"></line>
-                        </svg>
-                                <span>语音</span>
-                    </button>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+                                    <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                                    <line x1="12" y1="19" x2="12" y2="23"></line>
+                                    <line x1="8" y1="23" x2="16" y2="23"></line>
+                                </svg>
+                            </button>
                             <button class="send-button" id="sendButton" type="button">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                     <line x1="22" y1="2" x2="11" y2="13"></line>
                                     <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
-                        </svg>
-                    </button>
+                                </svg>
+                            </button>
                         </div>
+                        <div class="bottom-hint">AI生成仅供参考</div>
+                        <div class="image-preview" id="imagePreview"></div>
+                    </div>
+                </ai-prompt-input>
+
+                <!-- 我的空间面板（在对话面板内部切换） -->
+                <div class="my-space-panel" id="mySpacePanel">
+                    <div class="my-space-content">
+                        <div class="my-space-header">
+                            <button class="my-space-back" id="mySpaceBackBtn">返回</button>
+                            <div class="my-space-title" id="mySpaceTitle">我的空间</div>
+                            <div class="my-space-tabs">
+                                <button class="my-space-tab active" data-tab="settings">设置</button>
+                                <button class="my-space-tab" data-tab="resources">资源</button>
+                            </div>
+                        </div>
+                        <div class="my-space-body">
+                            <div class="my-space-section my-space-section-settings active">
+                                <div class="my-settings-list">
+                                    <div class="my-setting-card">
+                                        <div class="my-setting-meta">
+                                            <div class="my-setting-title">基础信息设置</div>
+                                            <div class="my-setting-desc">前置个性化身份信息设置，例如年级、学科、任教班级等。</div>
+                                        </div>
+                                    </div>
+
+                                    <div class="my-setting-card">
+                                        <div class="my-setting-meta">
+                                            <div class="my-setting-title">大模型相关设置</div>
+                                            <div class="my-setting-desc">模型能力与调用策略设置，用于控制不同类型任务的效果。</div>
+                                        </div>
+                                    </div>
+
+                                    <div class="my-setting-card">
+                                        <div class="my-setting-meta">
+                                            <div class="my-setting-title">个性化功能设置</div>
+                                            <div class="my-setting-desc">如系统默认功能配置、常用模板与偏好保存等。</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="my-space-section my-space-section-resources">
+                                <div class="resources-group">
+                                    <div class="resources-group-title">2025年12月</div>
+                                    <div class="resources-grid">
+                                        <div class="resource-card">
+                                            <div class="resource-name">&lt;pic&gt;</div>
+                                            <div class="resource-meta">学情图片资源</div>
+                                        </div>
+                                        <div class="resource-card">
+                                            <div class="resource-name">&lt;video&gt;</div>
+                                            <div class="resource-meta">讲解视频资源</div>
+                                        </div>
+                                        <div class="resource-card">
+                                            <div class="resource-name">&lt;pic&gt;</div>
+                                            <div class="resource-meta">板书截图</div>
+                                        </div>
+                                        <div class="resource-card">
+                                            <div class="resource-name">&lt;pdf&gt;</div>
+                                            <div class="resource-meta">试卷与讲义 PDF</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="resources-group">
+                                    <div class="resources-group-title">2025年11月</div>
+                                    <div class="resources-grid">
+                                        <div class="resource-card">
+                                            <div class="resource-name">&lt;pic&gt;</div>
+                                            <div class="resource-meta">错题图片</div>
+                                        </div>
+                                        <div class="resource-card">
+                                            <div class="resource-name">&lt;video&gt;</div>
+                                            <div class="resource-meta">课堂回放</div>
+                                        </div>
+                                        <div class="resource-card">
+                                            <div class="resource-name">&lt;pic&gt;</div>
+                                            <div class="resource-meta">板书留档</div>
+                                        </div>
+                                        <div class="resource-card">
+                                            <div class="resource-name">&lt;pdf&gt;</div>
+                                            <div class="resource-meta">纸质资料扫描件</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </ai-prompt-input>
             </div>
 
             <!-- 配置面板 -->
@@ -1248,6 +1871,25 @@
         </div>
     </div>
 
+    <!-- 悬浮 AI 主入口 -->
+    <div class="ai-fab" id="aiFab">
+        <div class="ai-fab-menu" id="aiFabMenu">
+            <button class="ai-fab-item" data-function="analysis">
+                <span>学情分析</span>
+                <span class="ai-fab-item-tag">示例</span>
+            </button>
+            <button class="ai-fab-item" data-function="imageEnhance">
+                <span>图片美化</span>
+                <span class="ai-fab-item-tag">示例</span>
+            </button>
+        </div>
+        <button class="ai-fab-main" id="aiFabMain">
+            <strong>AI</strong>
+            <span>助手</span>
+        </button>
+    </div>
+
+
     <script>
         // 定义 AI Conversation Web Component
         class AIConversation extends HTMLElement {
@@ -1321,6 +1963,21 @@
         const previewBtn = document.getElementById('previewBtn');
         const publishBtn = document.getElementById('publishBtn');
         const cancelBtn = document.getElementById('cancelBtn');
+        const chatFeatureTitle = document.getElementById('chatFeatureTitle');
+        const chatFeatureSubtitle = document.getElementById('chatFeatureSubtitle');
+        const aiFabMain = document.getElementById('aiFabMain');
+        const aiFabMenu = document.getElementById('aiFabMenu');
+        const aiFabItems = document.querySelectorAll('.ai-fab-item');
+        const mySpacePanel = document.getElementById('mySpacePanel');
+        const mySpaceBackBtn = document.getElementById('mySpaceBackBtn');
+        const mySpaceTitle = document.getElementById('mySpaceTitle');
+        const mySpaceTabs = document.querySelectorAll('.my-space-tab');
+        const mySpaceSections = {
+            settings: document.querySelector('.my-space-section-settings'),
+            resources: document.querySelector('.my-space-section-resources')
+        };
+        const chatCloseBtn = document.getElementById('chatCloseBtn');
+        const chatMySpaceBtn = document.getElementById('chatMySpaceBtn');
 
         // 功能配置
         const functionConfig = {
@@ -1337,12 +1994,20 @@
             homework: { 
                 title: '作业布置', 
                 subtitle: 'AI自动布置作业,请描述您的要求吧',
-                welcomeMessage: '您好！我是作业布置助手。请通过语音或文字描述您的作业需求，我也可以处理您上传的图片。让我来帮您布置作业！'
+                welcomeMessage: '您好！我是作业布置助手。请通过语音或文字描述您的作业需求，我也可以处理您上传的图片。让我来帮您布置作业！',
+                chatTagline: '作业布置 · 一键生成个性化练习与试卷'
             },
             analysis: { 
                 title: '学情分析', 
                 subtitle: '智能分析学生学习情况',
-                welcomeMessage: '您好！我是学情分析助手。我可以帮您分析学生的学习情况，生成详细的分析报告。'
+                welcomeMessage: '您好！我是学情分析助手。我可以帮您分析学生的学习情况，生成详细的分析报告。',
+                chatTagline: '学情分析 · 智能洞察班级学习情况'
+            },
+            imageEnhance: {
+                title: '图片美化',
+                subtitle: '清晰化、排版优化试题与课件图片',
+                welcomeMessage: '您好！我是图片美化助手。请上传需要处理的图片，我会帮您自动去噪、增强与裁边。',
+                chatTagline: '图片美化 · 智能清晰化与版式优化'
             },
             grading: { 
                 title: '作文批改', 
@@ -1398,6 +2063,12 @@
             const config = functionConfig[functionName] || functionConfig.homework;
             functionTitle.textContent = config.title;
             functionSubtitle.textContent = config.subtitle;
+            if (chatFeatureTitle) {
+                chatFeatureTitle.textContent = `AI助手 · ${config.title}`;
+            }
+            if (chatFeatureSubtitle) {
+                chatFeatureSubtitle.textContent = config.chatTagline || config.subtitle;
+            }
 
             // 重置配置面板状态
             appState.showConfig = false;
@@ -1422,6 +2093,36 @@
                     // 添加欢迎消息
                     const welcomeMsg = config.welcomeMessage || '您好！我可以帮助您。';
                     addMessage('assistant', welcomeMsg);
+
+                    // 针对部分功能追加带操作按钮组的引导消息
+                    if (functionName === 'analysis') {
+                        const actionsHTML = `
+                            <div class="message-actions">
+                                <button class="message-action-btn primary" data-action="analysis-overview">生成班级学情总览</button>
+                                <button class="message-action-btn" data-action="analysis-group-weak">按小组查看薄弱知识点</button>
+                                <button class="message-action-btn" data-action="analysis-export-report">导出为学情报告</button>
+                            </div>
+                        `;
+                        addMessage('assistant', '您也可以直接点击下面的快捷操作开始学情分析：', [], actionsHTML);
+                    } else if (functionName === 'imageEnhance') {
+                        const actionsHTML = `
+                            <div class="message-actions">
+                                <button class="message-action-btn primary" data-action="image-enhance-quiz">优化试题照片</button>
+                                <button class="message-action-btn" data-action="image-enhance-board">生成高清板书图片</button>
+                                <button class="message-action-btn" data-action="image-enhance-pdf">整理为讲义 PDF</button>
+                            </div>
+                        `;
+                        addMessage('assistant', '请选择需要的图片处理方式，或直接上传图片让我来识别：', [], actionsHTML);
+                    } else if (functionName === 'homework') {
+                        const actionsHTML = `
+                            <div class="message-actions">
+                                <button class="message-action-btn primary" data-action="homework-textbook">按教材章节智能布置</button>
+                                <button class="message-action-btn" data-action="homework-by-analysis">根据学情定制作业</button>
+                                <button class="message-action-btn" data-action="homework-from-history">从历史作业快速复用</button>
+                            </div>
+                        `;
+                        addMessage('assistant', '您可以选择一种布置方式，或直接用自然语言描述本次作业需求：', [], actionsHTML);
+                    }
                 }
             }
         }
@@ -1449,7 +2150,7 @@
         }
 
         // 添加消息到对话
-        function addMessage(role, content, images = []) {
+        function addMessage(role, content, images = [], extraHTML = '') {
             const messageDiv = document.createElement('ai-message');
             messageDiv.setAttribute('role', role);
             
@@ -1465,9 +2166,9 @@
             
             const messageHTML = `
                 <div class="message ${role}">
-                    <div class="message-avatar">${role === 'user' ? '我' : 'AI'}</div>
+                    <div class="message-avatar">${role === 'user' ? 'U' : 'AI'}</div>
                     <div>
-                        <div class="message-content">${content.replace(/\n/g, '<br>')}${imageHTML}</div>
+                        <div class="message-content">${content.replace(/\n/g, '<br>')}${imageHTML}${extraHTML}</div>
                         <div class="message-time">${time}</div>
                     </div>
                 </div>
@@ -1511,11 +2212,111 @@
             }
         }
 
+        // 通用问答回复
+        function handleGenericResponse(userMessage) {
+            hideTypingIndicator();
+            const responses = [
+                `我理解您说的是："${userMessage}"。让我来帮您处理。`,
+                `关于"${userMessage}"，我可以为您提供帮助。`,
+                `感谢您的提问："${userMessage}"。让我来分析一下。`
+            ];
+            const randomResponse = responses[Math.floor(Math.random() * responses.length)];
+            addMessage('assistant', randomResponse);
+        }
+
+        // 学情分析示例流程
+        async function handleAnalysisRequest(userMessage, images) {
+            await new Promise(resolve => setTimeout(resolve, 500));
+            hideTypingIndicator();
+
+            const analysisHTML = `
+                <div class="message assistant">
+                    <div class="message-avatar">AI</div>
+                    <div>
+                        <div class="message-content">
+                            已收到您的学情分析需求，将按以下步骤处理本次请求：
+                            <div class="task-list">
+                                <div class="task-list-title">学情分析流程:</div>
+                                <div class="task-item">
+                                    <input type="checkbox" class="task-checkbox" disabled>
+                                    <span>聚合最近一次作业与考试成绩，按班级/小组维度对比</span>
+                                </div>
+                                <div class="task-item">
+                                    <input type="checkbox" class="task-checkbox" disabled>
+                                    <span>识别高频错题与薄弱知识点</span>
+                                </div>
+                                <div class="task-item">
+                                    <input type="checkbox" class="task-checkbox" disabled>
+                                    <span>生成教学建议与分层作业推荐</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="message-time">刚刚</div>
+                    </div>
+                </div>
+            `;
+
+            const messageDiv = document.createElement('ai-message');
+            messageDiv.setAttribute('role', 'assistant');
+            messageDiv.innerHTML = analysisHTML;
+            chatContent.appendChild(messageDiv);
+
+            setTimeout(() => {
+                const checkboxes = messageDiv.querySelectorAll('.task-checkbox');
+                checkboxes.forEach(cb => cb.checked = true);
+            }, 1500);
+
+            setTimeout(() => {
+                const summary = '示例学情分析结论：本班整体正确率约为 78%，"代数式化简"与"函数图像"题目错误率较高，建议安排 10 分钟错题回顾，并为基础薄弱学生推送巩固练习。';
+                const actionsHTML = `
+                    <div class="message-actions">
+                        <button class="message-action-btn primary" data-action="analysis-export-report">生成班级学情报告</button>
+                        <button class="message-action-btn" data-action="analysis-student-detail">按学生维度查看详情</button>
+                        <button class="message-action-btn" data-action="analysis-generate-homework">为薄弱学生生成巩固作业</button>
+                    </div>
+                `;
+                addMessage('assistant', summary, [], actionsHTML);
+            }, 2000);
+        }
+
+        // 图片美化示例流程
+        async function handleImageEnhanceRequest(userMessage, images) {
+            await new Promise(resolve => setTimeout(resolve, 500));
+            hideTypingIndicator();
+            const hasImages = images && images.length > 0;
+            const content = hasImages
+                ? '我已收到您上传的图片，将从清晰度、对比度与裁剪三个维度进行自动优化。本示例仅展示流程，不会真正修改图片。'
+                : `收到您的图片美化需求："${userMessage}"。您可以上传需要处理的试题或板书照片，我会为您做清晰化与排版优化（本示例仅做流程演示）。`;
+            let actionsHTML = '';
+            if (hasImages) {
+                actionsHTML = `
+                    <div class="message-actions">
+                        <button class="message-action-btn primary" data-action="image-download-optimized">下载优化后图片</button>
+                        <button class="message-action-btn" data-action="image-replace-ppt">替换课堂课件中的图片</button>
+                        <button class="message-action-btn" data-action="image-to-pdf">整理为讲义 PDF</button>
+                    </div>
+                `;
+            } else {
+                actionsHTML = `
+                    <div class="message-actions">
+                        <button class="message-action-btn primary" data-action="image-upload-quiz">上传试题图片</button>
+                        <button class="message-action-btn" data-action="image-upload-board">上传板书照片</button>
+                    </div>
+                `;
+            }
+            addMessage('assistant', content, hasImages ? images : [], actionsHTML);
+        }
+
         // 处理作业布置请求
         async function handleHomeworkRequest(userMessage, images) {
             // 检查是否是作业布置请求
             const homeworkKeywords = ['作业', '布置', '发布', '题目', '题目', '班级', '组'];
             const isHomeworkRequest = homeworkKeywords.some(keyword => userMessage.includes(keyword));
+
+            if (!isHomeworkRequest || appState.currentFunction !== 'homework') {
+                handleGenericResponse(userMessage);
+                return;
+            }
 
             if (isHomeworkRequest && appState.currentFunction === 'homework') {
                 // 显示任务规划
@@ -1585,16 +2386,19 @@
                 
                 return;
             }
+        }
 
-            // 普通回复
-            hideTypingIndicator();
-                    const responses = [
-                `我理解您说的是："${userMessage}"。让我来帮您处理。`,
-                `关于"${userMessage}"，我可以为您提供帮助。`,
-                `感谢您的提问："${userMessage}"。让我来分析一下。`
-                    ];
-                    const randomResponse = responses[Math.floor(Math.random() * responses.length)];
-            addMessage('assistant', randomResponse);
+        // 根据当前功能分发请求处理
+        async function handleRequest(userMessage, images) {
+            if (appState.currentFunction === 'homework') {
+                await handleHomeworkRequest(userMessage, images);
+            } else if (appState.currentFunction === 'analysis') {
+                await handleAnalysisRequest(userMessage, images);
+            } else if (appState.currentFunction === 'imageEnhance') {
+                await handleImageEnhanceRequest(userMessage, images);
+            } else {
+                handleGenericResponse(userMessage);
+            }
         }
 
         // 发送消息
@@ -1625,7 +2429,7 @@
 
             try {
                 // 处理请求
-                await handleHomeworkRequest(messageText, images);
+                await handleRequest(messageText, images);
             } catch (error) {
                 hideTypingIndicator();
                 addMessage('assistant', '抱歉，发生了一个错误。请稍后再试。');
@@ -1692,10 +2496,264 @@
             }
         });
 
-        // 我的按钮
-        myBtn.addEventListener('click', () => {
-            alert('我的：查看个人信息和设置');
+        // 消息内操作按钮 - 事件委托
+        const actionProcessConfig = {
+            'analysis-overview': {
+                title: '正在生成班级学情总览',
+                steps: [
+                    '聚合最近两次作业与考试成绩',
+                    '按班级 / 小组 / 学生维度对比表现',
+                    '生成班级学情总览与关键结论'
+                ],
+                finalMessage: '示例结果：班级整体正答率 80%，A 组表现稳定，B 组在函数应用题上存在明显薄弱，可结合报告安排针对性讲评。'
+            },
+            'analysis-group-weak': {
+                title: '正在分析各小组薄弱知识点',
+                steps: [
+                    '统计各小组错题分布',
+                    '映射到知识点与题型',
+                    '输出每个小组的薄弱清单'
+                ],
+                finalMessage: '示例结果：B 组在“代数式化简”、C 组在“图像读数”上错误率较高，建议安排分组互助与针对性训练。'
+            },
+            'analysis-export-report': {
+                title: '正在生成学情分析报告（示例）',
+                steps: [
+                    '汇总成绩与作答数据',
+                    '整理文字结论与改进建议',
+                    '生成可下载的报告文件链接'
+                ],
+                finalMessage: '示例结果：学情报告已生成（示例），实际接入后可在“我的-资源”中查看并下载 PDF 报告。'
+            },
+            'analysis-student-detail': {
+                title: '正在整理学生维度学情详情',
+                steps: [
+                    '拉取学生历史成绩与作业记录',
+                    '计算个人掌握度与进步幅度',
+                    '按从低到高排序生成清单'
+                ],
+                finalMessage: '示例结果：已按掌握度从低到高列出学生学情清单，可据此进行分层辅导与家校沟通（演示数据）。'
+            },
+            'analysis-generate-homework': {
+                title: '正在为薄弱学生生成巩固作业',
+                steps: [
+                    '定位薄弱知识点与题型',
+                    '从题库中筛选匹配练习',
+                    '生成分层练习清单'
+                ],
+                finalMessage: '示例结果：已为薄弱学生生成 10 道针对性巩固题（演示），可作为下一次作业或课后练习使用。'
+            },
+            'image-enhance-quiz': {
+                title: '正在优化试题照片',
+                steps: [
+                    '自动裁剪多余边框',
+                    '增强对比度与清晰度',
+                    '统一版式以便打印与展示'
+                ],
+                finalMessage: '示例结果：试题照片已完成优化（演示），实际接入后可直接下载高清图片或插入到课件中。'
+            },
+            'image-enhance-board': {
+                title: '正在生成高清板书图片',
+                steps: [
+                    '去除背景噪点与反光',
+                    '增强粉笔笔迹清晰度',
+                    '调整尺寸以适配大屏展示'
+                ],
+                finalMessage: '示例结果：板书图片已高清化（演示），适合用于课后资料沉淀与课堂回顾。'
+            },
+            'image-enhance-pdf': {
+                title: '正在整理图片为讲义 PDF',
+                steps: [
+                    '按题目顺序排列图片',
+                    '统一页边距与比例',
+                    '生成可打印的讲义 PDF'
+                ],
+                finalMessage: '示例结果：讲义 PDF 已生成（演示），实际接入后会自动同步到“我的-资源”中。'
+            },
+            'image-download-optimized': {
+                title: '准备下载优化后的图片',
+                steps: [
+                    '打包优化后的图片资源',
+                    '生成临时下载链接',
+                    '校验文件完整性'
+                ],
+                finalMessage: '示例结果：图片已准备好下载（演示），实际接入后点击下载即可获得优化文件。'
+            },
+            'image-replace-ppt': {
+                title: '正在替换课件中的图片',
+                steps: [
+                    '定位课件中的原始图片位置',
+                    '替换为高清优化版本',
+                    '更新课件并保存新版本'
+                ],
+                finalMessage: '示例结果：课件图片已替换为高清版本（演示），实际接入后可在课件管理中查看。'
+            },
+            'image-to-pdf': {
+                title: '正在整理为讲义 PDF',
+                steps: [
+                    '合并多张图片',
+                    '生成 PDF 页面',
+                    '为每页添加页码与标题'
+                ],
+                finalMessage: '示例结果：讲义 PDF 已生成（演示），可在“我的-资源”中查看。'
+            },
+            'image-upload-quiz': {
+                title: '等待上传试题图片',
+                steps: [
+                    '引导教师选择本地试题照片',
+                    '识别拍摄角度与清晰度',
+                    '准备进入图片优化流程'
+                ],
+                finalMessage: '您可以通过下方上传入口选择试题图片，系统将自动进入优化与版式整理流程（演示）。'
+            },
+            'image-upload-board': {
+                title: '等待上传板书照片',
+                steps: [
+                    '引导教师拍摄或选择板书照片',
+                    '自动检测眩光与遮挡',
+                    '准备进入板书高清化流程'
+                ],
+                finalMessage: '请上传板书照片，系统会尝试去除噪点并提高清晰度（演示）。'
+            },
+            'homework-textbook': {
+                title: '正在按教材章节智能布置作业',
+                steps: [
+                    '读取当前教材版本与章节',
+                    '从题库中筛选匹配题目',
+                    '生成本次作业配置草稿'
+                ],
+                finalMessage: '示例结果：已根据教材章节生成一份包含基础题与提升题的作业草稿，您可以在右侧配置面板中进一步调整后发布。'
+            },
+            'homework-by-analysis': {
+                title: '正在根据学情定制作业',
+                steps: [
+                    '分析最近学情报告中的薄弱点',
+                    '匹配相关题目与题型',
+                    '生成差异化作业方案'
+                ],
+                finalMessage: '示例结果：已按学情结果为不同小组生成差异化作业（演示），实际接入后会自动带出具体题目与发布对象。'
+            },
+            'homework-from-history': {
+                title: '正在从历史作业中快速复用',
+                steps: [
+                    '检索最近发布的同类型作业',
+                    '过滤已使用过的题目',
+                    '生成可复用作业草稿'
+                ],
+                finalMessage: '示例结果：已为您复用一份历史作业（演示），实际接入后可在配置面板中按需增删题目。'
+            },
+            'homework-view-detail': {
+                title: '正在为您打开作业详情',
+                steps: [
+                    '加载本次作业的配置参数',
+                    '汇总题目与发布对象信息',
+                    '准备作业预览界面'
+                ],
+                finalMessage: '示例结果：作业详情已就绪（演示），实际接入后将直接打开预览弹窗。'
+            },
+            'homework-share-group': {
+                title: '正在准备分享到教研群',
+                steps: [
+                    '整理作业概要信息',
+                    '生成分享链接与摘要',
+                    '推送到指定教研群或协作空间'
+                ],
+                finalMessage: '示例结果：已将本次作业分享至教研协作空间（演示），实际接入后可在群聊或协作平台中查看。'
+            }
+        };
+
+        async function runActionProcess(actionKey) {
+            const config = actionProcessConfig[actionKey];
+            if (!config) {
+                handleGenericResponse(`操作：${actionKey}`);
+                return;
+            }
+
+            appState.isProcessing = true;
+            showTypingIndicator();
+            await new Promise(resolve => setTimeout(resolve, 500));
+            hideTypingIndicator();
+
+            const stepsHTML = config.steps.map(step => `
+                <div class="task-item">
+                    <input type="checkbox" class="task-checkbox" disabled>
+                    <span>${step}</span>
+                </div>
+            `).join('');
+
+            const processHTML = `
+                <div class="message assistant">
+                    <div class="message-avatar">AI</div>
+                    <div>
+                        <div class="message-content">
+                            ${config.title}
+                            <div class="task-list">
+                                <div class="task-list-title">任务清单:</div>
+                                ${stepsHTML}
+                            </div>
+                        </div>
+                        <div class="message-time">${getRelativeTime()}</div>
+                    </div>
+                </div>
+            `;
+
+            const processDiv = document.createElement('ai-message');
+            processDiv.setAttribute('role', 'assistant');
+            processDiv.innerHTML = processHTML;
+            chatContent.appendChild(processDiv);
+
+            setTimeout(() => {
+                const checkboxes = processDiv.querySelectorAll('.task-checkbox');
+                checkboxes.forEach(cb => cb.checked = true);
+            }, 1200);
+
+            setTimeout(() => {
+                addMessage('assistant', config.finalMessage);
+                appState.isProcessing = false;
+            }, 2200);
+        }
+
+        chatContent.addEventListener('click', (event) => {
+            const btn = event.target.closest('.message-action-btn');
+            if (!btn) return;
+            const action = btn.dataset.action;
+            if (!action || appState.isProcessing) return;
+            runActionProcess(action);
         });
+
+        // 打开/关闭我的空间
+        function setMySpaceTab(tab) {
+            mySpaceTabs.forEach(btn => {
+                const isActive = btn.dataset.tab === tab;
+                btn.classList.toggle('active', isActive);
+            });
+            if (mySpaceSections.settings) {
+                mySpaceSections.settings.classList.toggle('active', tab === 'settings');
+            }
+            if (mySpaceSections.resources) {
+                mySpaceSections.resources.classList.toggle('active', tab === 'resources');
+            }
+            if (mySpaceTitle) {
+                mySpaceTitle.textContent = tab === 'resources' ? '我的-资源' : '我的-设置';
+            }
+        }
+
+        function openMySpace(defaultTab = 'settings') {
+            if (!mySpacePanel) return;
+            chatContainer.classList.add('my-space-open');
+            setMySpaceTab(defaultTab);
+        }
+
+        function closeMySpace() {
+            if (!mySpacePanel) return;
+            chatContainer.classList.remove('my-space-open');
+        }
+
+        if (myBtn) {
+            myBtn.addEventListener('click', () => {
+                openMySpace('settings');
+            });
+        }
 
         // 新建会话按钮
         newChatBtn.addEventListener('click', () => {
@@ -1783,40 +2841,14 @@
                 chatContainer.style.display = 'flex';
                 configPanel.classList.remove('active');
                 
-                // 添加发布成功的消息，包含查看按钮
-                const messageDiv = document.createElement('ai-message');
-                messageDiv.setAttribute('role', 'assistant');
-                const time = getRelativeTime();
-                const messageHTML = `
-                    <div class="message assistant">
-                        <div class="message-avatar">AI</div>
-                        <div>
-                            <div class="message-content">
-                                <div>作业已成功发布！</div>
-                                <button class="homework-view-btn" onclick="showHomeworkPreview()" style="
-                                    margin-top: 12px;
-                                    padding: 6px 16px;
-                                    background: #1890ff;
-                                    color: white;
-                                    border: none;
-                                    border-radius: 6px;
-                                    font-size: 14px;
-                                    cursor: pointer;
-                                    transition: all 0.2s;
-                                    box-shadow: 0 2px 0 rgba(5, 145, 255, 0.1);
-                                ">查看作业详情</button>
-                            </div>
-                            <div class="message-time">${time}</div>
-                        </div>
+                // 添加发布成功的消息，包含查看按钮组
+                const extraHTML = `
+                    <div class="message-actions">
+                        <button class="message-action-btn primary" data-action="homework-view-detail">查看作业详情</button>
+                        <button class="message-action-btn" data-action="homework-share-group">分享到教研群</button>
                     </div>
                 `;
-                messageDiv.innerHTML = messageHTML;
-                chatContent.appendChild(messageDiv);
-                
-                // 滚动到底部
-                setTimeout(() => {
-                    chatContent.scrollTop = chatContent.scrollHeight;
-                }, 100);
+                addMessage('assistant', '作业已成功发布！', [], extraHTML);
             }
         });
 
@@ -1924,10 +2956,45 @@
         window.showHomeworkPreview = showHomeworkPreview;
         window.closeHomeworkPreview = closeHomeworkPreview;
 
-        // 初始化 - 显示欢迎消息
-        const initialConfig = functionConfig[appState.currentFunction] || functionConfig.homework;
-        addMessage('assistant', initialConfig.welcomeMessage || '您好！我可以帮助您。');
-        promptInput.focus();
+        // 悬浮入口交互
+        if (aiFabMain && aiFabMenu) {
+            aiFabMain.addEventListener('click', () => {
+                aiFabMenu.classList.toggle('open');
+            });
+        }
+
+        aiFabItems.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const fn = btn.dataset.function || 'analysis';
+                switchFunction(fn);
+                chatContainer.style.display = 'flex';
+                aiFabMenu.classList.remove('open');
+            });
+        });
+
+        if (chatCloseBtn) {
+            chatCloseBtn.addEventListener('click', () => {
+                chatContainer.style.display = 'none';
+            });
+        }
+
+        if (chatMySpaceBtn) {
+            chatMySpaceBtn.addEventListener('click', () => {
+                openMySpace('settings');
+            });
+        }
+
+        if (mySpaceBackBtn) {
+            mySpaceBackBtn.addEventListener('click', () => {
+                closeMySpace();
+            });
+        }
+
+        mySpaceTabs.forEach(tabBtn => {
+            tabBtn.addEventListener('click', () => {
+                setMySpaceTab(tabBtn.dataset.tab);
+            });
+        });
     </script>
 </body>
 </html>
